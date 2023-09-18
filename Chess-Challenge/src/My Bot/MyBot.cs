@@ -96,7 +96,6 @@ public class MyBot : IChessBot
 	Move mBestMove;
 	TEntry[] mTranspositionTable = new TEntry[kTTSize];
 	int[][] mPTables = new int[64][];
-	int[] mKillerMoves;
 
 	#endregion rMembers
 
@@ -145,7 +144,6 @@ public class MyBot : IChessBot
 			return mBestMove;
 
 		int depth = 1;
-		mKillerMoves = new int[1999];
 		while (timer.MillisecondsElapsedThisTurn < (msRemain / 200))
 			if(EvaluateBoardNegaMax(++depth, -kMassiveNum, kMassiveNum, true) > 999999) break;
 
@@ -211,8 +209,8 @@ public class MyBot : IChessBot
 			move = legalMoves[i];
 			moveScores[i] = -(move == entry.mBestMove ? 1000000 :
 									   move.IsCapture ? 100 * (int)move.CapturePieceType - (int)move.MovePieceType : 
-									 move.IsPromotion ? (int)move.PromotionPieceType : 
-														mKillerMoves[move.GetHashCode() % 1999]);
+									 move.IsPromotion ? (int)move.PromotionPieceType :
+														-(int)move.MovePieceType);
 		}
 		Array.Sort(moveScores, legalMoves);
 
@@ -235,10 +233,7 @@ public class MyBot : IChessBot
 			}
 			alpha = Math.Max(alpha, recordEval);
 			if (alpha >= beta)
-			{
-				mKillerMoves[move.GetHashCode() % 1999] = 500 + depth * 5;
 				break;
-			}
 		}
 
 		// Store in transposition table

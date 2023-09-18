@@ -7,7 +7,6 @@
 using ChessChallenge.API;
 using System;
 using System.Linq;
-using System.Numerics;
 
 
 
@@ -46,21 +45,19 @@ public class MyBotV1 : IChessBot
 
 	#region rConstants
 
-	UInt64[] kWhitePTables = {
-		 0x007B16BA4B8F7B00, 0x0021DC89C2B04F00, 0x000D1BCDF7871B00, 0xFF1BCE1560B0B5FF, 0xFFEB0304667E43FF, 0xFF9DB385E7BF9EFF, 0xFFA28385E7BF9FFF, 0x007F7C7A18406000,
-		 0xCC717E504B0D3582, 0xA40B0F3DE35BDFC4, 0x5CE4794E75B97CB5, 0xC6D6C0A813C8C457, 0x2E4AB519820A1A00, 0xF2E45A21838BDDFB, 0x4CC32101838BDFFE, 0x103CFEFE7C742000,
-		 0x4F6DDEF1FEEEB3B8, 0xB3BCC6B4C8BE2336, 0x5CDBADCF41C03476, 0x6E1C214AC8A199FC, 0xEE80FEFBD181D942, 0xD72D81C3C18199BF, 0xFB8D81C3C18199FF, 0x00727E3C3E7E6600,
-		 0x9D4B043DAE0090E6, 0xE7570EC9BD121C03, 0xFF0AD305DF4ED2FA, 0x6DE3249C553D0767, 0xAA90296679715964, 0x303C41C7FEFE5EA7, 0x200001C7FFFFDFE7, 0xDFFFFE3800002018,
-		 0x5CA995D33A2AA91B, 0x50814950D549736F, 0x45D71F7FB29951B9, 0xA6DA5F8C40A3991A, 0xE28E4CD0FDBEDB8D, 0x133DAFDFFFBFDA7F, 0x031F0FDFFFBFDBFF, 0xFCE0F02000402400,
-		 0xEBEB060C97C8134D, 0x209E11F6922BCC92, 0x2C6328ED1FCBE231, 0x6B45FEC72857FB51, 0x707A2580BB18D71A, 0x48BEBD7F46E7E731, 0x79FEBDFFFFFFFF39, 0x86014200000000C6,
-		 0x00EAC437994BD900, 0x00F46031FEC18E00, 0x00E2A5D986660E00, 0xFFCD292B421B6EFF, 0xFFABE538FEFFEEFF, 0xFFD7DD38FEFFEEFF, 0xFFFF0238FEFFEEFF, 0x00FFFFC701001100,
-		 0xE6C81580C11D542F, 0x55FFFFC2C97F73A7, 0x2F6D1D413637584C, 0x4700CEDFC9D0A3B8, 0x829ABC4242369D42, 0xBC7F7FC3C3F77E3D, 0x7FFFFFC3C3F7FFFF, 0x0000003C3C080000,
-		 0x926E99A434D9DE05, 0xB9B99A7BEA6F3F17, 0xC1FE382B798FC9ED, 0x43ACE5EA32AD53A0, 0x3C57FFEBF36E3C5A, 0xFFFFFFEBF3EFFFFF, 0xFFFFFFEBF3EFFFFF, 0x000000140C100000,
-		 0x3F0617FD0839086A, 0x4AF0B0434D78B0ED, 0xC650EF4036AD8338, 0xC2E01FBB0FA20CE6, 0xC2F0FFFBFF5FFF5F, 0xC2F0FFFBFFFFFFFF, 0xC2F0FFFBFFFFFFFF, 0x3D0F000400000000,
-		 0x58042874A146A228, 0xF97EDD811D5466C0, 0xE04FC62056FB7A12, 0x5EE59F0F9BD959CC, 0x4188BEA968D84098, 0x4191875101DBBF77, 0x4181870101DBFFFF, 0xBE7E78FEFE240000,
-		 0x6F618D5C3F582DC6, 0x6F2519D9558B3463, 0x821B1300466AC172, 0xCE4165DE7951A4A6, 0x522061A1C2C2668B, 0xDC010181C3C3E77C, 0xDF010181C3C3E7FF, 0x20FEFE7E3C3C1800
+	// Credit to Tyrant: https://github.com/Tyrant7/Easy-PST-Packer/tree/main
+	decimal[] kPackedPTables =
+	{
+		63746705523041458768562654720m, 71818693703096985528394040064m, 75532537544690978830456252672m, 75536154932036771593352371712m, 76774085526445040292133284352m, 03110608541636285947269332480m, 00936945638387574698250991104m, 75531285965747665584902616832m,
+		77047302762000299964198997571m, 03730792265775293618620982364m, 03121489077029470166123295018m, 03747712412930601838683035969m, 03763381335243474116535455791m, 08067176012614548496052660822m, 04977175895537975520060507415m, 02475894077091727551177487608m,
+		02458978764687427073924784380m, 03718684080556872886692423941m, 04959037324412353051075877138m, 03135972447545098299460234261m, 04371494653131335197311645996m, 09624249097030609585804826662m, 09301461106541282841985626641m, 02793818196182115168911564530m,
+		77683174186957799541255830262m, 04660418590176711545920359433m, 04971145620211324499469864196m, 05608211711321183125202150414m, 05617883191736004891949734160m, 07150801075091790966455611144m, 05619082524459738931006868492m, 00649197923531967450704711664m,
+		75809334407291469990832437230m, 78322691297526401047122740223m, 04348529951871323093202439165m, 04990460191572192980035045640m, 05597312470813537077508379404m, 04980755617409140165251173636m, 01890741055734852330174483975m, 76772801025035254361275759599m,
+		75502243563200070682362835182m, 78896921543467230670583692029m, 02489164206166677455700101373m, 04338830174078735659125311481m, 04960199192571758553533648130m, 03420013420025511569771334658m, 01557077491473974933188251927m, 77376040767919248347203368440m,
+		73949978050619586491881614568m, 77043619187199676893167803647m, 01212557245150259869494540530m, 03081561358716686153294085872m, 03392217589357453836837847030m, 01219782446916489227407330320m, 78580145051212187267589731866m, 75798434925965430405537592305m,
+		68369566912511282590874449920m, 72396532057599326246617936384m, 75186737388538008131054524416m, 77027917484951889231108827392m, 73655004947793353634062267392m, 76417372019396591550492896512m, 74568981255592060493492515584m, 70529879645288096380279255040m
 	};
-	UInt64[] kBlackPTables;
+
 
 
 	//                     P    N    B    R    Q    K
@@ -98,6 +95,8 @@ public class MyBotV1 : IChessBot
 	Board mBoard;
 	Move mBestMove;
 	TEntry[] mTranspositionTable = new TEntry[kTTSize];
+	int[][] mPTables = new int[64][];
+	int[] mKillerMoves;
 
 	#endregion rMembers
 
@@ -112,9 +111,14 @@ public class MyBotV1 : IChessBot
 	/// </summary>
 	public MyBotV1()
 	{
-		kBlackPTables = new UInt64[kWhitePTables.Length];
-		for (int i = 0; i < kWhitePTables.Length; ++i)
-			kBlackPTables[i] = BitConverter.ToUInt64(BitConverter.GetBytes(kWhitePTables[i]).Reverse().ToArray());
+		mPTables = kPackedPTables.Select(packedTable =>
+		{
+			int pieceType = 0;
+			return decimal.GetBits(packedTable).Take(3)
+				.SelectMany(c => BitConverter.GetBytes(c)
+					.Select((byte square) => (int)((sbyte)square * 1.461) + kPieceValues[pieceType++]))
+				.ToArray();
+		}).ToArray();
 	}
 
 	#endregion rInitialise
@@ -136,12 +140,14 @@ public class MyBotV1 : IChessBot
 		dNumPositionsEvaluated = 0;
 #endif
 		int msRemain = timer.MillisecondsRemaining;
+		mBestMove = mBoard.GetLegalMoves()[0];
 		if (msRemain < 200)
-			return mBoard.GetLegalMoves()[0];
-		int depth = 1;
-		while (timer.MillisecondsElapsedThisTurn < (msRemain / 200))
-			EvaluateBoardNegaMax(++depth, -kMassiveNum, kMassiveNum, true);
+			return mBestMove;
 
+		int depth = 1;
+		mKillerMoves = new int[1999];
+		while (timer.MillisecondsElapsedThisTurn < (msRemain / 200))
+			if (EvaluateBoardNegaMax(++depth, -kMassiveNum, kMassiveNum, true) > 999999) break;
 
 #if DEBUG_TIMER
 		dNumMovesMade++;
@@ -193,7 +199,7 @@ public class MyBotV1 : IChessBot
 #if DEBUG_TREE_SEARCH
 			dNumPositionsEvaluated++;
 #endif
-			recordEval = (mBoard.IsWhiteToMove ? 1 : -1) * (EvalColor(true) - EvalColor(false));
+			recordEval = (mBoard.IsWhiteToMove ? 1 : -1) * (EvalBoard());
 			if (recordEval >= beta || depth <= -4) return recordEval;
 			alpha = Math.Max(alpha, recordEval);
 		}
@@ -204,8 +210,9 @@ public class MyBotV1 : IChessBot
 		{
 			move = legalMoves[i];
 			moveScores[i] = -(move == entry.mBestMove ? 1000000 :
-									move.IsCapture ? 100 * (int)move.CapturePieceType - (int)move.MovePieceType :
-									move.IsPromotion ? (int)move.PromotionPieceType : 0);
+									   move.IsCapture ? 100 * (int)move.CapturePieceType - (int)move.MovePieceType :
+									 move.IsPromotion ? (int)move.PromotionPieceType :
+														mKillerMoves[move.GetHashCode() % 1999]);
 		}
 		Array.Sort(moveScores, legalMoves);
 
@@ -227,7 +234,11 @@ public class MyBotV1 : IChessBot
 					mBestMove = move;
 			}
 			alpha = Math.Max(alpha, recordEval);
-			if (alpha >= beta) break;
+			if (alpha >= beta)
+			{
+				mKillerMoves[move.GetHashCode() % 1999] = 500 + depth * 5;
+				break;
+			}
 		}
 
 		// Store in transposition table
@@ -242,29 +253,22 @@ public class MyBotV1 : IChessBot
 	/// <summary>
 	/// Evaluate the board for a given color.
 	/// </summary>
-	int EvalColor(bool isWhite)
+	int EvalBoard()
 	{
-		UInt64[] PTable = isWhite ? kWhitePTables : kBlackPTables;
+		int mg = 0, eg = 0, phase = 0;
 
-		int phase = 0;
-		int sumMg = 0;
-		int sumEg = 0;
-
-		for (int i = 0; i < 6; ++i)
+		for (int square = 0; square < 64; ++square)
 		{
-			ulong pieceBitBoard = mBoard.GetPieceBitboard((PieceType)(i + 1), isWhite);
-			int popcount = BitOperations.PopCount(pieceBitBoard);
-			phase += kPiecePhase[i] * popcount;
-			sumMg += (kPieceValues[i] - 121) * popcount;
-			sumEg += (kPieceValues[i + 6] - 121) * popcount;
-			for (int b = 0; b < 8; ++b)
-			{
-				sumMg += BitOperations.PopCount(pieceBitBoard & PTable[i * 8 + b]) * (1 << b);
-				sumEg += BitOperations.PopCount(pieceBitBoard & PTable[i * 8 + b + 48]) * (1 << b);
-			}
-		}
+			Piece piece = mBoard.GetPiece(new Square(square));
+			if (piece.IsNull) continue;
 
-		return sumMg * phase + sumEg * (12 - phase);
+			int pieceIdx = (int)piece.PieceType - 1;
+			mg += piece.IsWhite ? mPTables[square ^ 56][pieceIdx] : -mPTables[square][pieceIdx];
+			eg += piece.IsWhite ? mPTables[square ^ 56][pieceIdx + 6] : -mPTables[square][pieceIdx + 6];
+			phase += kPiecePhase[pieceIdx];
+		}
+		phase = Math.Min(phase, 24);
+		return (mg * phase + eg * (24 - phase)) / 24;
 	}
 
 	#endregion rThinking
