@@ -250,20 +250,46 @@ public class MyBot : IChessBot
 	/// </summary>
 	int EvalBoard()
 	{
-		int mg = 0, eg = 0, phase = 0;
+		int square = 0, mg = 0, eg = 0, phase = 0;
 
-		for(int square = 0; square < 64; ++square)
+		int[,] pawns = new int[2, 8];
+		int[] bishops = new int[2];
+
+		for( ; square < 64; ++square)
 		{
 			Piece piece = mBoard.GetPiece(new Square(square));
 			if (piece.IsNull) continue;
 
 			int pieceIdx = (int)piece.PieceType - 1;
+			int colIdx = piece.IsWhite ? 0 : 1;
+
+			switch (piece.PieceType)
+			{
+				case PieceType.Pawn:
+					++pawns[colIdx, square % 8];
+					break;
+				case PieceType.Bishop:
+					bishops[colIdx]++;
+					break;
+			}
+
 			mg += piece.IsWhite ? mPTables[square ^ 56][pieceIdx]   : -mPTables[square][pieceIdx];
 			eg += piece.IsWhite ? mPTables[square ^ 56][pieceIdx+6] : -mPTables[square][pieceIdx+6];
 			phase += kPiecePhase[pieceIdx];
 		}
+
 		phase = Math.Min(phase, 24);
-		return (mg * phase + eg * (24 - phase)) / 24;
+		phase = (mg * phase + eg * (24 - phase)) / 24;
+		phase += (bishops[0] * bishops[0] - bishops[1] * bishops[1]) * 50;
+
+		for (square = 0; square < 8; ++square)
+		{
+			mg = pawns[0, square];
+			eg = pawns[1, square];
+			phase += (mg-eg)*(1-mg-eg);
+		}
+
+		return phase + ((int)mBoard.ZobristKey % 8);
 	}
 
 	#endregion rThinking
